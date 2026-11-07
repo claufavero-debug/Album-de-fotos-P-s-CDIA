@@ -1,0 +1,2578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mural de Memórias • Pós & Viagem da Cláudia e Amigas 💖🏆</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-mural: #FFF8F2;
+      --primary: #FF4D79;
+      --primary-dark: #E03560;
+      --secondary: #7B61FF;
+      --accent-gold: #FFB800;
+      --accent-mint: #00C49A;
+      --accent-sky: #00A8E8;
+      --text-main: #2B2338;
+      --text-muted: #6E647E;
+      --card-bg: #FFFFFF;
+      --shadow-polaroid: 0 10px 28px rgba(43, 35, 56, 0.12), 0 2px 6px rgba(43, 35, 56, 0.06);
+      --shadow-hover: 0 18px 38px rgba(255, 77, 121, 0.22), 0 4px 12px rgba(43, 35, 56, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-mural);
+      background-image:
+        radial-gradient(#FFD1DC 1.3px, transparent 1.3px),
+        radial-gradient(#CBE8FF 1.3px, var(--bg-mural) 1.3px);
+      background-size: 36px 36px;
+      background-position: 0 0, 18px 18px;
+      color: var(--text-main);
+      padding-bottom: 48px;
+      overflow-x: hidden;
+      transition: padding-right 0.25s ease;
+    }
+
+    @media (min-width: 960px) {
+      body {
+        padding-right: 300px;
+      }
+      body.sidebar-collapsed {
+        padding-right: 80px;
+      }
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Top Decorative Garland */
+    .garland-bar {
+      height: 12px;
+      background: repeating-linear-gradient(
+        90deg,
+        #FF4D79 0px, #FF4D79 40px,
+        #FFB800 40px, #FFB800 80px,
+        #00C49A 80px, #00C49A 120px,
+        #7B61FF 120px, #7B61FF 160px,
+        #00A8E8 160px, #00A8E8 200px
+      );
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    /* Hero Header */
+    .hero {
+      max-width: 1320px;
+      margin: 18px auto 14px;
+      padding: 0 20px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFF4F8 55%, #F2F6FF 100%);
+      border-radius: 26px;
+      padding: 22px 28px;
+      box-shadow: 0 12px 34px rgba(123, 97, 255, 0.11);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "🏆 ✨ 🥂 🌅 🎓 💖";
+      position: absolute;
+      right: 24px;
+      top: 18px;
+      font-size: 1.5rem;
+      letter-spacing: 6px;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .hero-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #FFE5EC;
+      color: #D92B5A;
+      box-shadow: 0 2px 6px rgba(217, 43, 90, 0.1);
+    }
+
+    .pill-badge.gold {
+      background: #FFF3C4;
+      color: #9A6700;
+    }
+
+    .pill-badge.purple {
+      background: #ECE8FF;
+      color: #5B3FD9;
+    }
+
+    .pill-badge.mint {
+      background: #D8F8EF;
+      color: #007F63;
+    }
+
+    .hero-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.18;
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.04rem;
+      color: var(--text-muted);
+      max-width: 900px;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      border-radius: 16px;
+      padding: 12px 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.94rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FF4D79, #FF7556);
+      color: #FFF;
+      box-shadow: 0 8px 20px rgba(255, 77, 121, 0.35);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #7B61FF, #5B8DEF);
+      color: #FFF;
+      box-shadow: 0 8px 20px rgba(123, 97, 255, 0.3);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #FFB800, #FF8A00);
+      color: #2B2338;
+      box-shadow: 0 8px 20px rgba(255, 184, 0, 0.3);
+    }
+
+    .btn-mint {
+      background: linear-gradient(135deg, #00C49A, #00A8E8);
+      color: #FFF;
+      box-shadow: 0 8px 20px rgba(0, 196, 154, 0.28);
+    }
+
+    .btn-outline {
+      background: #FFFFFF;
+      color: var(--text-main);
+      border: 2px solid #E6DFEE;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Sticky Notes Mural ("Recadinhos das Amigas") */
+    .notes-section {
+      max-width: 1320px;
+      margin: 18px auto 26px;
+      padding: 0 20px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .sticky-note {
+      padding: 20px 18px 16px;
+      border-radius: 6px 6px 18px 6px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.09);
+      position: relative;
+      font-family: 'Caveat', cursive;
+      font-size: 1.38rem;
+      line-height: 1.28;
+      color: #2B2338;
+      transition: transform 0.2s ease;
+    }
+
+    .sticky-note:hover {
+      transform: scale(1.03) rotate(0deg) !important;
+      z-index: 5;
+    }
+
+    .sticky-note::before {
+      content: "";
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 68px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .sticky-note-footer {
+      margin-top: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0.8;
+    }
+
+    .delete-note-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      opacity: 0.5;
+    }
+    .delete-note-btn:hover { opacity: 1; }
+
+    /* Filter & Search Toolbar */
+    .toolbar-wrap {
+      position: sticky;
+      top: 10px;
+      z-index: 50;
+      max-width: 1320px;
+      margin: 0 auto 24px;
+      padding: 0 20px;
+    }
+
+    .toolbar {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      border-radius: 22px;
+      padding: 14px 18px;
+      box-shadow: 0 10px 30px rgba(43, 35, 56, 0.1);
+      border: 1px solid rgba(255, 77, 121, 0.15);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .category-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cat-btn {
+      border: none;
+      background: #F4F0F9;
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cat-btn:hover {
+      background: #FFE4EC;
+      color: var(--primary);
+    }
+
+    .cat-btn.active {
+      background: var(--primary);
+      color: #FFF;
+      box-shadow: 0 4px 12px rgba(255, 77, 121, 0.35);
+    }
+
+    .cat-count {
+      background: rgba(0, 0, 0, 0.12);
+      padding: 2px 7px;
+      border-radius: 99px;
+      font-size: 0.74rem;
+    }
+
+    .cat-btn.active .cat-count {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 230px;
+      max-width: 340px;
+      background: #F6F3FA;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--primary);
+      background: #FFF;
+    }
+
+    .search-box input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-size: 0.88rem;
+      outline: none;
+      color: var(--text-main);
+      font-family: inherit;
+    }
+
+    /* Mural Polaroid Grid */
+    .mural-container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .mural-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+      gap: 28px 24px;
+      align-items: start;
+    }
+
+    .mural-grid.clean-grid .polaroid-card {
+      transform: none !important;
+    }
+
+    .polaroid-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 14px 14px 18px;
+      box-shadow: var(--shadow-polaroid);
+      position: relative;
+      transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .polaroid-card:hover {
+      transform: translateY(-6px) rotate(0deg) scale(1.015) !important;
+      box-shadow: var(--shadow-hover);
+      z-index: 10;
+    }
+
+    /* Pushpin on top of each Polaroid */
+    .polaroid-pin {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      position: absolute;
+      top: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.25), inset -2px -2px 4px rgba(0,0,0,0.2), inset 2px 2px 4px rgba(255,255,255,0.6);
+      z-index: 3;
+    }
+
+    .polaroid-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3.4;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #F3EEF8;
+      cursor: pointer;
+    }
+
+    .polaroid-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+      display: block;
+    }
+
+    .polaroid-card:hover .polaroid-img-wrap img {
+      transform: scale(1.05);
+    }
+
+    .polaroid-sticker {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      font-size: 1.65rem;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+      pointer-events: none;
+    }
+
+    .polaroid-cat-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(6px);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .fav-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: transform 0.15s ease;
+    }
+
+    .fav-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .polaroid-caption {
+      font-family: 'Caveat', cursive;
+      font-size: 1.36rem;
+      font-weight: 700;
+      color: #2B2338;
+      line-height: 1.25;
+      margin: 14px 4px 10px;
+      cursor: pointer;
+    }
+
+    .polaroid-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin: 0 4px 10px;
+    }
+
+    .reaction-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .react-chip {
+      border: 1px solid #F0EAF8;
+      background: #FAF8FC;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .react-chip:hover {
+      background: #FFE5EC;
+      border-color: #FFB8CD;
+      transform: scale(1.08);
+    }
+
+    .card-comments-preview {
+      background: #FAF7FD;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+      max-height: 85px;
+      overflow-y: auto;
+    }
+
+    .card-comment-item {
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+
+    .card-comment-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .card-comment-author {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .card-actions-footer {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .card-btn {
+      flex: 1;
+      border: none;
+      background: #F3EFFA;
+      color: var(--text-main);
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .card-btn:hover {
+      background: #E5DDF5;
+    }
+
+    .card-btn.primary-Ghost {
+      background: #FFE8EF;
+      color: var(--primary-dark);
+    }
+
+    .card-btn.primary-Ghost:hover {
+      background: #FFD4E2;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 22, 43, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #FFF;
+      border-radius: 26px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+      position: relative;
+      animation: popIn 0.22s ease;
+    }
+
+    .modal-box.large {
+      max-width: 1060px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.94); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.08);
+      font-size: 1.1rem;
+      cursor: pointer;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background: var(--primary);
+      color: #FFF;
+    }
+
+    /* Lightbox Detail Modal */
+    .lightbox-layout {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      min-height: 560px;
+      max-height: 90vh;
+    }
+
+    @media (max-width: 860px) {
+      .lightbox-layout {
+        grid-template-columns: 1fr;
+        max-height: 92vh;
+        overflow-y: auto;
+      }
+    }
+
+    .lightbox-img-side {
+      background: #191324;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 340px;
+      padding: 20px;
+    }
+
+    .lightbox-img-side img {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: #FFF;
+      font-size: 1.3rem;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+
+    .nav-arrow:hover {
+      background: var(--primary);
+    }
+
+    .nav-arrow.prev { left: 14px; }
+    .nav-arrow.next { right: 14px; }
+
+    .lightbox-info-side {
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #FFF;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1.5px solid #E5DFEE;
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+    }
+
+    .comments-list {
+      flex: 1;
+      overflow-y: auto;
+      margin: 12px 0;
+      padding-right: 4px;
+      max-height: 220px;
+    }
+
+    .comment-bubble {
+      background: #F8F5FC;
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .comment-bubble-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    /* Slideshow Cinema Mode */
+    .slideshow-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #2D1F4A 0%, #110B1C 100%);
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      padding: 24px;
+    }
+
+    .slideshow-overlay.open {
+      display: flex;
+    }
+
+    .slideshow-stage {
+      max-width: 920px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .slideshow-polaroid {
+      background: #FFF;
+      color: #2B2338;
+      padding: 18px 18px 26px;
+      border-radius: 22px;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+      display: inline-block;
+      max-width: 100%;
+      animation: fadeSlide 0.6s ease;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: scale(0.95) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .slideshow-polaroid img {
+      max-height: 62vh;
+      max-width: 82vw;
+      border-radius: 14px;
+      object-fit: contain;
+    }
+
+    .slideshow-caption {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      margin-top: 14px;
+      color: #2B2338;
+      max-width: 720px;
+    }
+
+    /* Dedicated Non-Overlapping Right Sidebar for Music Player & Quick Actions */
+    .music-bar {
+      position: fixed;
+      right: 12px;
+      top: 18px;
+      max-height: calc(100vh - 36px);
+      overflow-y: auto;
+      width: 276px;
+      background: rgba(34, 25, 51, 0.96);
+      backdrop-filter: blur(16px);
+      color: #FFF;
+      border-radius: 22px;
+      padding: 14px;
+      z-index: 900;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.16);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .music-bar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .music-bar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.22);
+      border-radius: 999px;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.14);
+      margin: 2px 0;
+      width: 100%;
+    }
+
+    .sidebar-section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 2px;
+    }
+
+    .sidebar-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      width: 100%;
+    }
+
+    .sidebar-actions .btn {
+      width: 100%;
+      justify-content: flex-start;
+      padding: 9px 13px;
+      font-size: 0.83rem;
+      border-radius: 13px;
+    }
+
+    .sidebar-mini-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .sidebar-mini-btn:hover {
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 959px) {
+      .music-bar {
+        position: static;
+        max-height: none;
+        width: calc(100% - 40px);
+        max-width: 600px;
+        margin: 0 auto 20px;
+        transform: none !important;
+      }
+    }
+
+    .music-bar.collapsed {
+      width: 64px;
+      padding: 12px 8px;
+      border-radius: 32px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .music-bar.collapsed .music-expanded-only {
+      display: none !important;
+    }
+
+    .music-bar:not(.collapsed) .music-collapsed-only {
+      display: none !important;
+    }
+
+    .music-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .music-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .vinyl-disc {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: conic-gradient(#FF4D79, #FFB800, #7B61FF, #00C49A, #FF4D79);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      box-shadow: 0 0 12px rgba(255, 77, 121, 0.5);
+      cursor: pointer;
+    }
+
+    .vinyl-disc.playing {
+      animation: spin 4s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .music-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .music-btn-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .music-btn {
+      background: rgba(255,255,255,0.12);
+      color: #FFF;
+      border: none;
+      border-radius: 12px;
+      padding: 8px 11px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .music-btn:hover {
+      background: var(--primary);
+    }
+
+    .music-btn.play-main {
+      background: var(--primary);
+      flex: 1;
+      padding: 8px 12px;
+      text-align: center;
+    }
+
+    .track-select {
+      background: rgba(255,255,255,0.1);
+      color: #FFF;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      width: 100%;
+      outline: none;
+    }
+
+    .track-select option {
+      color: #2B2338;
+      background: #FFF;
+    }
+
+    .embed-drawer {
+      position: fixed;
+      top: 50%;
+      right: 292px;
+      transform: translateY(-50%);
+      width: 340px;
+      max-width: calc(100vw - 90px);
+      background: #221933;
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.4);
+      z-index: 899;
+      display: none;
+    }
+
+    .embed-drawer.open {
+      display: block;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #2B2338;
+      color: #FFF;
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      z-index: 9999;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+  <div id="toast" class="toast"></div>
+  <div class="garland-bar"></div>
+
+  <!-- HERO HEADER -->
+  <header class="hero">
+    <div class="hero-card">
+      <div class="hero-badge-row">
+        <span class="pill-badge gold">🏆 PROJETO DESTAQUE • 2º Simpósio CDIA no SUS (2025 – Nov/2026)</span>
+        <span class="pill-badge purple">🎓 Orientador: Prof. Anderson França</span>
+        <span class="pill-badge mint" id="photo-count-badge">📸 131 Fotos no Mural</span>
+        <span class="pill-badge" id="sync-status-badge">🪗 Trilha Oficial: João Gomes</span>
+      </div>
+
+      <h1 class="hero-title" id="album-title">Mural de Memórias: Pós CDIA no SUS • Nosso Quinteto & Prof. Anderson</h1>
+      <p class="hero-subtitle" id="album-subtitle" style="margin-bottom:14px;">
+        Uma jornada iniciada em 2025 que uniu 5 mulheres de diferentes cantos do Brasil sob a orientação do <strong>Prof. Anderson França</strong> e fechou com chave de ouro (e troféu de Projeto Destaque!) agora em novembro no 2º Simpósio em Brasília — ao som de <strong>João Gomes</strong>!
+      </p>
+
+      <!-- Quinteto Cities Strip -->
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:2px;">
+        <span class="pill-badge" style="background:#FFE8F0; color:#C81E56;">📍 Londrina - PR (Cláudia)</span>
+        <span class="pill-badge" style="background:#FFF0D6; color:#A85D00;">📍 Belo Horizonte - MG</span>
+        <span class="pill-badge" style="background:#E8F8F0; color:#0A7B48;">📍 Uberlândia - MG</span>
+        <span class="pill-badge" style="background:#E6F4FF; color:#0062A8;">📍 Mato Grosso do Sul - MS</span>
+        <span class="pill-badge" style="background:#F2E8FF; color:#6428C8;">📍 São Luís - MA</span>
+        <span class="pill-badge gold">🎓 Orientador: Prof. Anderson França</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- STICKY NOTES ("RECADINHOS DAS AMIGAS") -->
+  <section class="notes-section">
+    <div class="section-header">
+      <h2 class="section-title">📌 Mural de Recadinhos & Dedicatórias das Amigas</h2>
+      <button class="btn btn-outline" style="padding: 7px 14px; font-size: 0.82rem;" onclick="openNoteModal()">
+        + Escrever Recadinho
+      </button>
+    </div>
+    <div class="notes-grid" id="notes-grid"></div>
+  </section>
+
+  <!-- FILTER & SEARCH TOOLBAR -->
+  <div class="toolbar-wrap">
+    <div class="toolbar">
+      <div class="category-tabs" id="category-tabs"></div>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="search-input" placeholder="Buscar momento, comentário, lugar..." oninput="renderMural()" />
+        </div>
+        <button class="cat-btn" id="layout-toggle-btn" onclick="toggleGridLayout()" title="Alternar entre Mural Polaroid inclinado e Grade alinhada">
+          📐 Alinhar Grade
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POLAROID MURAL GRID -->
+  <main class="mural-container">
+    <div class="mural-grid" id="mural-grid"></div>
+  </main>
+
+  <!-- LIGHTBOX / PHOTO DETAIL & COMMENTS MODAL -->
+  <div class="modal-backdrop" id="lightbox-modal" onclick="if(event.target===this) closeLightbox()">
+    <div class="modal-box large">
+      <button class="modal-close" onclick="closeLightbox()">✕</button>
+      <div class="lightbox-layout">
+        <div class="lightbox-img-side">
+          <button class="nav-arrow prev" onclick="navigateLightbox(-1)">❮</button>
+          <img id="lb-img" src="" alt="Foto do Álbum" />
+          <button class="nav-arrow next" onclick="navigateLightbox(1)">❯</button>
+        </div>
+        <div class="lightbox-info-side">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
+            <span class="pill-badge purple" id="lb-category-badge">Categoria</span>
+            <button class="btn btn-outline" style="padding:4px 10px; font-size:0.78rem;" onclick="toggleEditPhotoForm()">
+              ✏️ Editar Legenda / Momento
+            </button>
+            <button class="btn btn-outline" style="padding:4px 10px; font-size:0.78rem;" id="lb-fav-btn" onclick="toggleFavoriteCurrent()">
+              ❤️ Favoritar
+            </button>
+          </div>
+
+          <p id="lb-caption-display" style="font-family:'Caveat',cursive; font-size:1.65rem; line-height:1.25; margin-bottom:12px; color:#2B2338;"></p>
+
+          <!-- Collapsible Edit Caption Form -->
+          <div id="lb-edit-form" style="display:none; background:#FAF7FD; padding:12px; border-radius:14px; margin-bottom:12px;">
+            <div class="form-group">
+              <label>Legenda da Foto</label>
+              <textarea id="lb-edit-caption" class="form-control" rows="2"></textarea>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div class="form-group">
+                <label>Momento / Categoria</label>
+                <select id="lb-edit-category" class="form-control">
+                  <option value="Seminário & Premiação">🏆 Seminário & Premiação</option>
+                  <option value="Passeios & Brasília">🌅 Passeios & Brasília</option>
+                  <option value="Gastronomia & Brindes">🥂 Gastronomia & Brindes</option>
+                  <option value="Amigas & Risadas">💖 Amigas & Risadas</option>
+                  <option value="Aeroporto & Embarque">✈️ Aeroporto & Embarque</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Adesivo da Polaroid</label>
+                <select id="lb-edit-sticker" class="form-control">
+                  <option value="🏆">🏆 Troféu</option>
+                  <option value="💖">💖 Coração</option>
+                  <option value="🥂">🥂 Brinde</option>
+                  <option value="🌅">🌅 Pôr do Sol</option>
+                  <option value="🎓">🎓 Formatura / Pós</option>
+                  <option value="✈️">✈️ Viagem</option>
+                  <option value="😂">😂 Risadas</option>
+                  <option value="🧉">🧉 Tereré / Café</option>
+                  <option value="✨">✨ Brilho</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; justify-content:flex-end;">
+              <button class="btn btn-primary" style="padding:7px 14px; font-size:0.82rem;" onclick="savePhotoEdit()">Salvar Alterações</button>
+            </div>
+          </div>
+
+          <div class="reaction-bar" id="lb-reactions" style="margin-bottom:14px;"></div>
+
+          <h4 style="font-size:0.9rem; margin-bottom:6px; color:var(--text-muted);">💬 Comentários das Amigas nesta Foto</h4>
+          <div class="comments-list" id="lb-comments-list"></div>
+
+          <div style="margin-top:auto; padding-top:10px; border-top:1px solid #EFEAF6;">
+            <div style="display:grid; grid-template-columns:1fr 2fr; gap:8px; margin-bottom:8px;">
+              <input type="text" id="lb-comment-author" class="form-control" placeholder="Seu nome (ex: Cláudia)" />
+              <input type="text" id="lb-comment-text" class="form-control" placeholder="Escreva um comentário carinhoso..." onkeydown="if(event.key==='Enter') addCommentFromLightbox()" />
+            </div>
+            <button class="btn btn-primary" style="width:100%; justify-content:center; padding:10px;" onclick="addCommentFromLightbox()">
+              💌 Publicar Comentário na Foto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPLOAD NEW PHOTOS MODAL -->
+  <div class="modal-backdrop" id="upload-modal" onclick="if(event.target===this) closeUploadModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeUploadModal()">✕</button>
+      <h3 style="font-family:'Fredoka',sans-serif; font-size:1.5rem; margin-bottom:6px;">📸 Inserir Novas Fotos no Álbum</h3>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:18px;">
+        Você e suas amigas podem escolher uma ou várias fotos do celular/computador e já deixar um comentário especial!
+      </p>
+
+      <div class="form-group">
+        <label>Escolha as Fotos (pode selecionar várias de uma vez)</label>
+        <input type="file" id="upload-files" accept="image/*" multiple class="form-control" onchange="previewUploadFiles()" />
+      </div>
+
+      <div id="upload-preview-strip" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:12px;"></div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label>Seu Nome</label>
+          <input type="text" id="upload-author" class="form-control" placeholder="Ex: Cláudia, Júlia, Regina..." />
+        </div>
+        <div class="form-group">
+          <label>Momento / Categoria</label>
+          <select id="upload-category" class="form-control">
+            <option value="Amigas & Risadas">💖 Amigas & Risadas</option>
+            <option value="Seminário & Premiação">🏆 Seminário & Premiação</option>
+            <option value="Passeios & Brasília">🌅 Passeios & Brasília</option>
+            <option value="Gastronomia & Brindes">🥂 Gastronomia & Brindes</option>
+            <option value="Aeroporto & Embarque">✈️ Aeroporto & Embarque</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Legenda / Comentário da Foto</label>
+        <textarea id="upload-caption" class="form-control" rows="2" placeholder="Conte como foi esse momento especial! 💖"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Adesivo da Moldura</label>
+        <select id="upload-sticker" class="form-control">
+          <option value="💖">💖 Coração</option>
+          <option value="🏆">🏆 Troféu Projeto Destaque</option>
+          <option value="🥂">🥂 Brinde</option>
+          <option value="🌅">🌅 Pôr do Sol</option>
+          <option value="🎓">🎓 Pós CDIA</option>
+          <option value="😂">😂 Risadas</option>
+          <option value="✈️">✈️ Viagem</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" id="upload-submit-btn" style="width:100%; justify-content:center;" onclick="submitUploadedPhotos()">
+        ✨ Adicionar ao Mural Agora
+      </button>
+    </div>
+  </div>
+
+  <!-- ADD STICKY NOTE MODAL -->
+  <div class="modal-backdrop" id="note-modal" onclick="if(event.target===this) closeNoteModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeNoteModal()">✕</button>
+      <h3 style="font-family:'Fredoka',sans-serif; font-size:1.5rem; margin-bottom:6px;">📌 Colar Recadinho no Mural</h3>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">
+        Deixe uma dedicatória, piada interna da viagem ou mensagem de carinho para o grupo!
+      </p>
+      <div class="form-group">
+        <label>Seu Nome</label>
+        <input type="text" id="note-author" class="form-control" placeholder="Ex: Cláudia 💖" />
+      </div>
+      <div class="form-group">
+        <label>Mensagem do Post-it</label>
+        <textarea id="note-text" class="form-control" rows="3" placeholder="Escreva aqui seu recadinho..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Cor do Post-it</label>
+        <select id="note-color" class="form-control">
+          <option value="#FFF3B0">💛 Amarelo Sol</option>
+          <option value="#FFD6E0">🌸 Rosa Doce</option>
+          <option value="#D4F8E8">🌿 Verde Menta</option>
+          <option value="#E2DCFF">💜 Lilás Suave</option>
+          <option value="#D0ECFF">💎 Azul Céu de Brasília</option>
+        </select>
+      </div>
+      <button class="btn btn-secondary" style="width:100%; justify-content:center;" onclick="submitStickyNote()">
+        📌 Fixar Recadinho no Mural
+      </button>
+    </div>
+  </div>
+
+  <!-- ADD MUSIC MODAL -->
+  <div class="modal-backdrop" id="music-modal" onclick="if(event.target===this) closeMusicModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeMusicModal()">✕</button>
+      <h3 style="font-family:'Fredoka',sans-serif; font-size:1.5rem; margin-bottom:6px;">🎵 Adicionar Música ao Álbum</h3>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">
+        Suba um arquivo MP3/WAV do seu computador ou celular, ou cole um link do YouTube / Spotify!
+      </p>
+
+      <div class="form-group">
+        <label>Nome da Música</label>
+        <input type="text" id="music-title" class="form-control" placeholder="Ex: Nossa Música da Viagem 🎶" />
+      </div>
+
+      <div class="form-group">
+        <label>Opção 1: Escolher Arquivo de Áudio (MP3, WAV, OGG, M4A)</label>
+        <input type="file" id="music-file" accept="audio/*" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <label>Opção 2: Ou colar Link do YouTube / Spotify / MP3</label>
+        <input type="text" id="music-url" class="form-control" placeholder="https://www.youtube.com/watch?v=... ou link do Spotify" />
+      </div>
+
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="submitNewMusic()">
+        🎶 Salvar e Tocar Música
+      </button>
+    </div>
+  </div>
+
+  <!-- SHARE & CLOUD COLLABORATION MODAL -->
+  <div class="modal-backdrop" id="share-modal" onclick="if(event.target===this) closeShareModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeShareModal()">✕</button>
+      <h3 style="font-family:'Fredoka',sans-serif; font-size:1.5rem; margin-bottom:8px;">🌐 Compartilhar com as Amigas</h3>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">
+        Todas as fotos, legendas, comentários e músicas ficam salvos automaticamente! Veja como compartilhar com as amigas:
+      </p>
+
+      <div style="background:#FAF7FD; border-radius:16px; padding:14px; margin-bottom:14px; border:1px solid #E6DFEE;">
+        <h4 style="font-size:0.95rem; margin-bottom:6px; color:var(--secondary);">🚀 Opção 1: Link Público Online Gratuito (Para mandar no WhatsApp)</h4>
+        <p style="font-size:0.84rem; color:var(--text-muted); line-height:1.45; margin-bottom:10px;">
+          Você pode gerar um link público gratuito na internet agora mesmo (ou subir no Netlify Drop / GitHub Pages) para que suas amigas abram pelo celular em qualquer cidade e adicionem fotos e comentários em tempo real!
+        </p>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label>Sincronização em Nuvem Opcional (Firebase / JSON Storage URL)</label>
+          <input type="text" id="cloud-sync-url" class="form-control" placeholder="Opcional: URL de banco em nuvem (ou deixe em branco para usar o servidor integrado)" />
+        </div>
+        <button class="btn btn-secondary" style="padding:8px 14px; font-size:0.82rem;" onclick="saveCloudConfig()">
+          ☁️ Salvar Configuração de Nuvem
+        </button>
+      </div>
+
+      <div style="background:#FFF8E7; border-radius:16px; padding:14px; margin-bottom:14px; border:1px solid #FFE299;">
+        <h4 style="font-size:0.95rem; margin-bottom:6px; color:#9A6700;">💾 Opção 2: Exportar / Importar Pacote Atualizado do Álbum</h4>
+        <p style="font-size:0.84rem; color:var(--text-muted); line-height:1.45; margin-bottom:10px;">
+          Baixe um backup completo das fotos novas e comentários ou importe atualizações enviadas pelas amigas:
+        </p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-gold" style="padding:8px 14px; font-size:0.82rem;" onclick="exportAlbumBackup()">
+            ⬇️ Baixar Backup do Álbum (.json)
+          </button>
+          <label class="btn btn-outline" style="padding:8px 14px; font-size:0.82rem; cursor:pointer;">
+            ⬆️ Importar Atualização
+            <input type="file" accept=".json" style="display:none;" onchange="importAlbumBackup(event)" />
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEOS COMEMORATIVOS MODAL -->
+  <div class="modal-backdrop" id="video-modal" onclick="if(event.target===this) closeVideoModal()">
+    <div class="modal-box" style="max-width:780px;">
+      <button class="modal-close" onclick="closeVideoModal()">✕</button>
+      <h3 style="font-family:'Fredoka',sans-serif; font-size:1.55rem; margin-bottom:6px;">🎥 Vídeos Comemorativos da Pós & Viagem</h3>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:18px;">
+        Preparamos <strong>2 versões em vídeo MP4</strong> prontas para assistir ou baixar e enviar no WhatsApp das amigas ou postar nos Stories/Reels!
+      </p>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:18px;">
+        <div style="background:#FAF7FD; border-radius:18px; padding:14px; border:1px solid #E6DFEE;">
+          <h4 style="font-size:0.98rem; margin-bottom:8px; color:var(--secondary);">🖥️ 1. Vídeo Melhores Momentos (Horizontal HD)</h4>
+          <video controls style="width:100%; border-radius:12px; background:#000; margin-bottom:10px;" preload="metadata">
+            <source src="Video_Melhores_Momentos_Pos_Claudia.mp4" type="video/mp4" />
+          </video>
+          <a href="Video_Melhores_Momentos_Pos_Claudia.mp4" download="Video_Melhores_Momentos_Pos_Claudia.mp4" class="btn btn-primary" style="width:100%; justify-content:center; padding:10px; font-size:0.86rem;">
+            ⬇️ Baixar Vídeo Horizontal (.MP4)
+          </a>
+        </div>
+
+        <div style="background:#FFF8F2; border-radius:18px; padding:14px; border:1px solid #FFD6E0;">
+          <h4 style="font-size:0.98rem; margin-bottom:8px; color:var(--primary-dark);">📱 2. Vídeo Vertical (Reels / Stories / Status WhatsApp)</h4>
+          <video controls style="width:100%; max-height:260px; border-radius:12px; background:#000; margin-bottom:10px;" preload="metadata">
+            <source src="Video_Reels_WhatsApp_Pos_Claudia.mp4" type="video/mp4" />
+          </video>
+          <a href="Video_Reels_WhatsApp_Pos_Claudia.mp4" download="Video_Reels_WhatsApp_Pos_Claudia.mp4" class="btn btn-gold" style="width:100%; justify-content:center; padding:10px; font-size:0.86rem;">
+            ⬇️ Baixar Vídeo para Reels / WhatsApp (.MP4)
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDESHOW CINEMA OVERLAY -->
+  <div class="slideshow-overlay" id="slideshow-overlay">
+    <div style="position:absolute; top:20px; right:24px; display:flex; gap:10px;">
+      <button class="btn btn-gold" onclick="launchConfetti()">🎉 Confetes</button>
+      <button class="btn btn-primary" onclick="stopSlideshow()">✕ Fechar Apresentação</button>
+    </div>
+    <div class="slideshow-stage" id="slideshow-stage"></div>
+    <div style="margin-top:20px; display:flex; gap:12px;">
+      <button class="btn btn-outline" onclick="stepSlideshow(-1)">❮ Anterior</button>
+      <button class="btn btn-secondary" id="slideshow-pause-btn" onclick="togglePauseSlideshow()">⏸️ Pausar</button>
+      <button class="btn btn-outline" onclick="stepSlideshow(1)">Próxima ❯</button>
+    </div>
+  </div>
+
+  <!-- EMBEDDED YOUTUBE / SPOTIFY DRAWER -->
+  <div class="embed-drawer" id="embed-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; color:#FFF; font-size:0.82rem; margin-bottom:8px;">
+      <span>🎬 Player Externo (YouTube / Spotify)</span>
+      <button onclick="document.getElementById('embed-drawer').classList.remove('open')" style="background:none;border:none;color:#FFF;cursor:pointer;">✕</button>
+    </div>
+    <div id="embed-container"></div>
+  </div>
+
+  <!-- LATERAL COLLAPSIBLE SIDEBAR (MUSIC PLAYER + ALBUM ACTIONS) -->
+  <div class="music-bar" id="music-bar">
+    <!-- Minimized Lateral Icon Strip View -->
+    <div class="music-collapsed-only" style="display:flex; flex-direction:column; align-items:center; gap:9px;">
+      <div class="vinyl-disc" id="vinyl-disc-mini" onclick="toggleCollapseMusicBar()" title="Expandir Barra Lateral">🪗</div>
+      <button class="sidebar-mini-btn" id="play-pause-btn-mini" style="background:var(--primary); color:#FFF;" onclick="togglePlayMusic()" title="Tocar / Pausar João Gomes">▶️</button>
+      <div class="sidebar-divider"></div>
+      <button class="sidebar-mini-btn" style="background:linear-gradient(135deg,#FF4D79,#FF7556); color:#FFF;" onclick="openUploadModal()" title="➕ Inserir Mais Fotos">➕</button>
+      <button class="sidebar-mini-btn" style="background:linear-gradient(135deg,#7B61FF,#5B8DEF); color:#FFF;" onclick="openNoteModal()" title="📌 Colar Recadinho no Mural">📌</button>
+      <button class="sidebar-mini-btn" style="background:linear-gradient(135deg,#FFB800,#FF8A00); color:#2B2338;" onclick="openVideoModal()" title="🎥 Vídeos Comemorativos (MP4 / Reels)">🎥</button>
+      <button class="sidebar-mini-btn" style="background:linear-gradient(135deg,#FFB800,#FF8A00); color:#2B2338;" onclick="startSlideshow()" title="🎬 Apresentação com João Gomes">🎬</button>
+      <button class="sidebar-mini-btn" style="background:linear-gradient(135deg,#00C49A,#00A8E8); color:#FFF;" onclick="openShareModal()" title="🌐 Compartilhar com as Amigas">🌐</button>
+      <button class="sidebar-mini-btn" style="background:#FFF; color:#2B2338;" onclick="launchConfetti()" title="🎉 Comemorar!">🎉</button>
+      <button class="music-btn" style="padding:5px 8px; font-size:0.75rem;" onclick="toggleCollapseMusicBar()" title="Abrir menu lateral completo">◀</button>
+    </div>
+
+    <!-- Expanded Lateral Card View -->
+    <div class="music-header-row music-expanded-only">
+      <div class="music-info">
+        <div class="vinyl-disc" id="vinyl-disc" onclick="togglePlayMusic()">🪗</div>
+        <div style="overflow:hidden;">
+          <div style="font-weight:700; font-size:0.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="now-playing-title">🪗 João Gomes — Eu Tenho a Senha</div>
+          <div style="font-size:0.72rem; opacity:0.75;" id="now-playing-artist">Playlist João Gomes • Pós CDIA</div>
+        </div>
+      </div>
+      <button class="music-btn" style="padding:4px 8px; font-size:0.75rem;" onclick="toggleCollapseMusicBar()" title="Minimizar barra lateral para ícones compactos">➖</button>
+    </div>
+
+    <div class="music-controls music-expanded-only">
+      <select class="track-select" id="track-select" onchange="selectTrack(this.value)"></select>
+
+      <div class="music-btn-row">
+        <button class="music-btn" onclick="prevTrack()" title="Música Anterior">⏮️</button>
+        <button class="music-btn play-main" id="play-pause-btn" onclick="togglePlayMusic()">▶️ Tocar João Gomes</button>
+        <button class="music-btn" onclick="nextTrack()" title="Próxima Música">⏭️</button>
+      </div>
+
+      <div class="music-btn-row">
+        <span style="font-size:0.75rem; opacity:0.8;">🔊</span>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.85" style="flex:1; accent-color:#FF4D79;" oninput="changeVolume(this.value)" title="Volume" />
+      </div>
+
+      <div class="music-btn-row">
+        <button class="music-btn" style="flex:1; background:rgba(30,215,96,0.28);" onclick="openJoaoGomesSpotify()" title="Abrir Playlist do João Gomes no Spotify">
+          🎧 Spotify
+        </button>
+        <button class="music-btn" style="flex:1; background:rgba(255,77,121,0.35);" onclick="openMusicModal()">
+          ➕ Música
+        </button>
+      </div>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">✨ Menu Rápido do Mural</div>
+
+      <div class="sidebar-actions">
+        <button class="btn btn-primary" onclick="openUploadModal()">
+          ➕ Inserir Mais Fotos
+        </button>
+        <button class="btn btn-secondary" onclick="openNoteModal()">
+          📌 Colar Recadinho no Mural
+        </button>
+        <button class="btn btn-gold" onclick="openVideoModal()">
+          🎥 Vídeos Comemorativos (MP4 / Reels)
+        </button>
+        <button class="btn btn-gold" onclick="startSlideshow()">
+          🎬 Apresentação com João Gomes 🪗
+        </button>
+        <button class="btn btn-mint" onclick="openShareModal()">
+          🌐 Compartilhar com as Amigas
+        </button>
+        <button class="btn btn-outline" style="background:rgba(255,255,255,0.95); border:none;" onclick="launchConfetti()">
+          🎉 Comemorar!
+        </button>
+      </div>
+    </div>
+    <audio id="audio-player" onended="nextTrack()"></audio>
+  </div>
+
+  <!-- INITIAL DATA FALLBACK -->
+  <script src="dados_iniciais.js"></script>
+
+  <script>
+    let albumData = window.INITIAL_ALBUM_DATA || {
+      title: "Mural de Memórias: Pós & Brasília com as Amigas",
+      subtitle: "2º Seminário de Ciência de Dados e IA no SUS • Projeto Destaque 🏆",
+      photos: [],
+      stickyNotes: [],
+      tracks: []
+    };
+
+    let activeCategory = "Todas";
+    let isCleanGrid = false;
+    let currentLightboxIndex = 0;
+    let filteredPhotos = [];
+    let currentTrackIndex = 0;
+    let isPlayingMusic = false;
+    let slideshowTimer = null;
+    let slideshowPaused = false;
+    let slideshowIdx = 0;
+    let hasBackend = false;
+
+    const CATEGORIES = [
+      { id: "Todas", label: "✨ Todas" },
+      { id: "Favoritas", label: "❤️ Destaques & Favoritas" },
+      { id: "Seminário & Premiação", label: "🏆 Seminário & Premiação" },
+      { id: "Passeios & Brasília", label: "🌅 Passeios & Brasília" },
+      { id: "Gastronomia & Brindes", label: "🥂 Gastronomia & Brindes" },
+      { id: "Amigas & Risadas", label: "💖 Amigas & Risadas" },
+      { id: "Aeroporto & Embarque", label: "✈️ Aeroporto & Embarque" }
+    ];
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.style.display = "block";
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => { t.style.display = "none"; }, 3200);
+    }
+
+    async function initAlbum() {
+      // Load from localStorage if updated offline
+      const savedLocal = localStorage.getItem("ALBUM_CLAUDIA_AMIGAS_V3");
+      if (savedLocal) {
+        try {
+          const parsed = JSON.parse(savedLocal);
+          if (parsed && parsed.photos && parsed.photos.length >= albumData.photos.length) {
+            albumData = parsed;
+          }
+        } catch (e) {}
+      }
+
+      // Ensure tracks always use the real João Gomes MP3 files (never old .wav files)
+      if (window.INITIAL_ALBUM_DATA && window.INITIAL_ALBUM_DATA.tracks) {
+        const customTracks = (albumData.tracks || []).filter(t => !t.id || !t.id.startsWith("jg-"));
+        albumData.tracks = [...window.INITIAL_ALBUM_DATA.tracks, ...customTracks];
+      }
+
+      // Try live backend API
+      try {
+        const res = await fetch("/api/album");
+        if (res.ok) {
+          const serverData = await res.json();
+          if (serverData && serverData.photos) {
+            albumData = serverData;
+            hasBackend = true;
+            document.getElementById("sync-status-badge").textContent = "🟢 Sincronizado • Playlist João Gomes 🪗";
+          }
+        }
+      } catch (e) {
+        hasBackend = false;
+      }
+
+      // Check Cloud Sync URL if configured
+      const cloudUrl = albumData.cloudSyncUrl || localStorage.getItem("ALBUM_CLOUD_URL") || "";
+      if (cloudUrl) {
+        document.getElementById("cloud-sync-url").value = cloudUrl;
+        pullFromCloud(cloudUrl);
+      }
+
+      renderAll();
+      initMusicPlayer();
+    }
+
+    function buildCloudDelta() {
+      const baseIds = new Set((window.INITIAL_ALBUM_DATA ? window.INITIAL_ALBUM_DATA.photos : []).map(p => p.id));
+      const addedPhotos = albumData.photos.filter(p => !baseIds.has(p.id));
+      const captionEdits = {}, categoryEdits = {}, stickerEdits = {}, favorites = {}, reactions = {}, comments = {};
+      albumData.photos.forEach(p => {
+        if (baseIds.has(p.id)) {
+          captionEdits[p.id] = p.caption;
+          categoryEdits[p.id] = p.category;
+          stickerEdits[p.id] = p.sticker;
+          favorites[p.id] = p.favorite;
+          reactions[p.id] = p.reactions;
+          if (p.comments && p.comments.length > 0) comments[p.id] = p.comments;
+        }
+      });
+      return {
+        isDelta: true,
+        addedPhotos,
+        captionEdits,
+        categoryEdits,
+        stickerEdits,
+        favorites,
+        reactions,
+        comments,
+        stickyNotes: albumData.stickyNotes
+      };
+    }
+
+    function applyCloudDelta(d) {
+      if (!d) return;
+      if (d.photos) {
+        albumData = d;
+        return;
+      }
+      if (d.isDelta) {
+        const existingIds = new Set(albumData.photos.map(p => p.id));
+        (d.addedPhotos || []).slice().reverse().forEach(ap => {
+          if (!existingIds.has(ap.id)) {
+            albumData.photos.unshift(ap);
+            existingIds.add(ap.id);
+          }
+        });
+        albumData.photos.forEach(p => {
+          if (d.captionEdits && d.captionEdits[p.id]) p.caption = d.captionEdits[p.id];
+          if (d.categoryEdits && d.categoryEdits[p.id]) p.category = d.categoryEdits[p.id];
+          if (d.stickerEdits && d.stickerEdits[p.id]) p.sticker = d.stickerEdits[p.id];
+          if (d.favorites && typeof d.favorites[p.id] === "boolean") p.favorite = d.favorites[p.id];
+          if (d.reactions && d.reactions[p.id]) p.reactions = d.reactions[p.id];
+          if (d.comments && d.comments[p.id]) p.comments = d.comments[p.id];
+        });
+        if (d.stickyNotes) albumData.stickyNotes = d.stickyNotes;
+      }
+    }
+
+    function persistState() {
+      try {
+        localStorage.setItem("ALBUM_CLAUDIA_AMIGAS_V3", JSON.stringify(albumData));
+      } catch (e) {}
+
+      const cloudUrl = albumData.cloudSyncUrl || localStorage.getItem("ALBUM_CLOUD_URL") || "";
+      if (cloudUrl) {
+        fetch(cloudUrl, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(buildCloudDelta())
+        }).catch(() => {});
+      }
+    }
+
+    async function pullFromCloud(url) {
+      try {
+        const r = await fetch(url, { headers: { "Accept": "application/json" } });
+        if (r.ok) {
+          const d = await r.json();
+          applyCloudDelta(d);
+          renderAll();
+          document.getElementById("sync-status-badge").textContent = "☁️ Nuvem Online Ativa • João Gomes 🪗";
+        }
+      } catch (e) {}
+    }
+
+    function renderAll() {
+      document.getElementById("photo-count-badge").textContent = `📸 ${albumData.photos.length} Fotos no Mural`;
+      renderNotes();
+      renderCategories();
+      renderMural();
+    }
+
+    function renderNotes() {
+      const grid = document.getElementById("notes-grid");
+      const notes = albumData.stickyNotes || [];
+      grid.innerHTML = notes.map(n => `
+        <div class="sticky-note" style="background:${n.color || '#FFF3B0'}; transform:rotate(${n.rotation || -1.5}deg);">
+          <div>"${escapeHtml(n.text)}"</div>
+          <div class="sticky-note-footer">
+            <span>— ${escapeHtml(n.author)} (${escapeHtml(n.date || 'Nov 2026')})</span>
+            <button class="delete-note-btn" onclick="deleteNote('${n.id}')" title="Remover recadinho">🗑️</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderCategories() {
+      const container = document.getElementById("category-tabs");
+      const counts = { "Todas": albumData.photos.length, "Favoritas": 0 };
+      albumData.photos.forEach(p => {
+        counts[p.category] = (counts[p.category] || 0) + 1;
+        if (p.favorite) counts["Favoritas"]++;
+      });
+
+      container.innerHTML = CATEGORIES.map(c => `
+        <button class="cat-btn ${activeCategory === c.id ? 'active' : ''}" onclick="setCategory('${c.id}')">
+          <span>${c.label}</span>
+          <span class="cat-count">${counts[c.id] || 0}</span>
+        </button>
+      `).join("");
+    }
+
+    function setCategory(cat) {
+      activeCategory = cat;
+      renderCategories();
+      renderMural();
+    }
+
+    function toggleGridLayout() {
+      isCleanGrid = !isCleanGrid;
+      const grid = document.getElementById("mural-grid");
+      const btn = document.getElementById("layout-toggle-btn");
+      grid.classList.toggle("clean-grid", isCleanGrid);
+      btn.textContent = isCleanGrid ? "🎨 Modo Polaroid Inclinado" : "📐 Alinhar Grade";
+    }
+
+    function getFilteredPhotos() {
+      const q = (document.getElementById("search-input").value || "").trim().toLowerCase();
+      return albumData.photos.filter(p => {
+        if (activeCategory === "Favoritas" && !p.favorite) return false;
+        if (activeCategory !== "Todas" && activeCategory !== "Favoritas" && p.category !== activeCategory) return false;
+        if (!q) return true;
+        const inCap = (p.caption || "").toLowerCase().includes(q);
+        const inCat = (p.category || "").toLowerCase().includes(q);
+        const inAuth = (p.author || "").toLowerCase().includes(q);
+        const inCom = (p.comments || []).some(c => (c.text || "").toLowerCase().includes(q) || (c.author || "").toLowerCase().includes(q));
+        return inCap || inCat || inAuth || inCom;
+      });
+    }
+
+    function renderMural() {
+      filteredPhotos = getFilteredPhotos();
+      const grid = document.getElementById("mural-grid");
+
+      if (filteredPhotos.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column:1/-1; text-align:center; padding:60px 20px; background:#FFF; border-radius:24px;">
+            <div style="font-size:3rem; margin-bottom:10px;">🔍📸</div>
+            <h3 style="font-family:'Fredoka',sans-serif; margin-bottom:6px;">Nenhuma foto encontrada neste filtro</h3>
+            <p style="color:var(--text-muted);">Experimente limpar a busca ou escolher outra categoria acima!</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filteredPhotos.map((p, idx) => {
+        const commentsHtml = (p.comments && p.comments.length > 0)
+          ? `<div class="card-comments-preview">
+              ${p.comments.slice(-2).map(c => `
+                <div class="card-comment-item">
+                  <span class="card-comment-author">${escapeHtml(c.author)}:</span> ${escapeHtml(c.text)}
+                </div>
+              `).join("")}
+            </div>`
+          : "";
+
+        const reactions = p.reactions || { "❤️": 1, "👏": 1, "😍": 1 };
+        const reactHtml = ["❤️", "👏", "😍", "🤣", "🥂", "🏆"].map(em => {
+          const val = reactions[em] || 0;
+          return `<button class="react-chip" onclick="reactToPhoto('${p.id}', '${em}', event)">${em} <span>${val}</span></button>`;
+        }).join("");
+
+        return `
+          <article class="polaroid-card" style="transform: rotate(${p.rotation || 0}deg);">
+            <div class="polaroid-pin" style="background:${p.pinColor || '#FF4D79'};"></div>
+            <div class="polaroid-img-wrap" onclick="openLightbox(${idx})">
+              <img src="${encodeURI(p.src)}" alt="${escapeHtml(p.caption)}" loading="lazy" />
+              <span class="polaroid-cat-tag">${escapeHtml(p.category)}</span>
+              <button class="fav-btn" onclick="toggleFavorite('${p.id}', event)" title="Marcar como favorita">
+                ${p.favorite ? '❤️' : '🤍'}
+              </button>
+              <span class="polaroid-sticker">${p.sticker || '✨'}</span>
+            </div>
+
+            <div class="polaroid-caption" onclick="openLightbox(${idx})">
+              ${escapeHtml(p.caption)}
+            </div>
+
+            <div class="polaroid-meta">
+              <span>📸 ${escapeHtml(p.author || 'Acervo')}</span>
+              <span>💬 ${(p.comments || []).length} coment.</span>
+            </div>
+
+            <div class="reaction-bar">${reactHtml}</div>
+            ${commentsHtml}
+
+            <div class="card-actions-footer">
+              <button class="card-btn primary-Ghost" onclick="openLightbox(${idx})">
+                💬 Comentar / Ampliar
+              </button>
+              <button class="card-btn" onclick="openLightboxAndEdit(${idx})">
+                ✏️ Legenda
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function reactToPhoto(photoId, emoji, ev) {
+      if (ev) ev.stopPropagation();
+      const p = albumData.photos.find(x => x.id === photoId);
+      if (!p) return;
+      p.reactions = p.reactions || {};
+      p.reactions[emoji] = (p.reactions[emoji] || 0) + 1;
+      if (emoji === "🏆") launchConfetti();
+
+      renderMural();
+      if (document.getElementById("lightbox-modal").classList.contains("open")) {
+        renderLightboxContent();
+      }
+      persistState();
+
+      if (hasBackend) {
+        fetch("/api/update_photo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ photoId, action: "react", emoji })
+        }).catch(() => {});
+      }
+    }
+
+    async function toggleFavorite(photoId, ev) {
+      if (ev) ev.stopPropagation();
+      const p = albumData.photos.find(x => x.id === photoId);
+      if (!p) return;
+      p.favorite = !p.favorite;
+      renderCategories();
+      renderMural();
+      persistState();
+
+      if (hasBackend) {
+        fetch("/api/update_photo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ photoId, action: "toggle_favorite" })
+        }).catch(() => {});
+      }
+    }
+
+    /* LIGHTBOX FUNCTIONS */
+    function openLightbox(idx) {
+      currentLightboxIndex = idx;
+      document.getElementById("lb-edit-form").style.display = "none";
+      document.getElementById("lightbox-modal").classList.add("open");
+      renderLightboxContent();
+    }
+
+    function openLightboxAndEdit(idx) {
+      openLightbox(idx);
+      document.getElementById("lb-edit-form").style.display = "block";
+    }
+
+    function closeLightbox() {
+      document.getElementById("lightbox-modal").classList.remove("open");
+    }
+
+    function navigateLightbox(dir) {
+      if (!filteredPhotos.length) return;
+      currentLightboxIndex = (currentLightboxIndex + dir + filteredPhotos.length) % filteredPhotos.length;
+      document.getElementById("lb-edit-form").style.display = "none";
+      renderLightboxContent();
+    }
+
+    function renderLightboxContent() {
+      const p = filteredPhotos[currentLightboxIndex];
+      if (!p) return;
+      document.getElementById("lb-img").src = encodeURI(p.src);
+      document.getElementById("lb-category-badge").textContent = `${p.sticker || '✨'} ${p.category}`;
+      document.getElementById("lb-caption-display").textContent = p.caption;
+      document.getElementById("lb-fav-btn").innerHTML = p.favorite ? "❤️ Favorita" : "🤍 Favoritar";
+
+      document.getElementById("lb-edit-caption").value = p.caption;
+      document.getElementById("lb-edit-category").value = p.category;
+      document.getElementById("lb-edit-sticker").value = p.sticker || "💖";
+
+      const reactions = p.reactions || {};
+      document.getElementById("lb-reactions").innerHTML = ["❤️", "👏", "😍", "🤣", "🥂", "🏆"].map(em => `
+        <button class="react-chip" onclick="reactToPhoto('${p.id}', '${em}', event)">
+          ${em} <span>${reactions[em] || 0}</span>
+        </button>
+      `).join("");
+
+      const comments = p.comments || [];
+      const listEl = document.getElementById("lb-comments-list");
+      if (comments.length === 0) {
+        listEl.innerHTML = `<p style="font-size:0.84rem; color:var(--text-muted); padding:10px 0;">Seja a primeira amiga a deixar um comentário nesta foto! 💖</p>`;
+      } else {
+        listEl.innerHTML = comments.map(c => `
+          <div class="comment-bubble">
+            <div class="comment-bubble-header">
+              <span>${escapeHtml(c.author)}</span>
+              <span>${escapeHtml(c.date || '')}</span>
+            </div>
+            <div style="font-size:0.88rem;">${escapeHtml(c.text)}</div>
+          </div>
+        `).join("");
+      }
+    }
+
+    function toggleEditPhotoForm() {
+      const f = document.getElementById("lb-edit-form");
+      f.style.display = f.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleFavoriteCurrent() {
+      const p = filteredPhotos[currentLightboxIndex];
+      if (p) {
+        toggleFavorite(p.id);
+        renderLightboxContent();
+      }
+    }
+
+    function savePhotoEdit() {
+      const p = filteredPhotos[currentLightboxIndex];
+      if (!p) return;
+      p.caption = document.getElementById("lb-edit-caption").value.trim() || p.caption;
+      p.category = document.getElementById("lb-edit-category").value;
+      p.sticker = document.getElementById("lb-edit-sticker").value;
+
+      document.getElementById("lb-edit-form").style.display = "none";
+      renderLightboxContent();
+      renderCategories();
+      renderMural();
+      persistState();
+      showToast("✨ Legenda atualizada com sucesso!");
+
+      if (hasBackend) {
+        fetch("/api/update_photo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            photoId: p.id,
+            action: "edit",
+            caption: p.caption,
+            category: p.category,
+            sticker: p.sticker
+          })
+        }).catch(() => {});
+      }
+    }
+
+    function addCommentFromLightbox() {
+      const p = filteredPhotos[currentLightboxIndex];
+      if (!p) return;
+      const authorInput = document.getElementById("lb-comment-author");
+      const textInput = document.getElementById("lb-comment-text");
+      const author = authorInput.value.trim() || "Amiga 💖";
+      const text = textInput.value.trim();
+      if (!text) {
+        showToast("Escreva uma mensagem para comentar!");
+        return;
+      }
+      const dateStr = new Date().toLocaleDateString("pt-BR");
+      p.comments = p.comments || [];
+      p.comments.push({
+        id: "c-" + Date.now(),
+        author,
+        text,
+        date: dateStr
+      });
+      textInput.value = "";
+      renderLightboxContent();
+      renderMural();
+      persistState();
+      showToast("💌 Comentário adicionado!");
+
+      if (hasBackend) {
+        fetch("/api/update_photo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            photoId: p.id,
+            action: "comment",
+            author,
+            text,
+            date: dateStr
+          })
+        }).catch(() => {});
+      }
+    }
+
+    /* UPLOAD NEW PHOTOS */
+    function openUploadModal() {
+      document.getElementById("upload-modal").classList.add("open");
+    }
+    function closeUploadModal() {
+      document.getElementById("upload-modal").classList.remove("open");
+    }
+
+    let pendingUploadDataUrls = [];
+
+    function previewUploadFiles() {
+      const input = document.getElementById("upload-files");
+      const strip = document.getElementById("upload-preview-strip");
+      strip.innerHTML = "";
+      pendingUploadDataUrls = [];
+
+      Array.from(input.files || []).forEach(file => {
+        compressImageFile(file, 1280, 0.82).then(dataUrl => {
+          pendingUploadDataUrls.push(dataUrl);
+          const img = document.createElement("img");
+          img.src = dataUrl;
+          img.style.height = "72px";
+          img.style.borderRadius = "10px";
+          img.style.objectFit = "cover";
+          strip.appendChild(img);
+        });
+      });
+    }
+
+    function compressImageFile(file, maxDim, quality) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let w = img.width, h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+              else { w = Math.round(w * maxDim / h); h = maxDim; }
+            }
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL("image/jpeg", quality));
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function submitUploadedPhotos() {
+      if (pendingUploadDataUrls.length === 0) {
+        showToast("Selecione pelo menos uma foto do celular ou computador!");
+        return;
+      }
+      const author = document.getElementById("upload-author").value.trim() || "Amiga 💖";
+      const category = document.getElementById("upload-category").value;
+      const caption = document.getElementById("upload-caption").value.trim() || "Mais um momento inesquecível do nosso grupo! 💖✨";
+      const sticker = document.getElementById("upload-sticker").value;
+      const dateStr = new Date().toLocaleDateString("pt-BR");
+
+      const btn = document.getElementById("upload-submit-btn");
+      btn.textContent = "⏳ Salvando fotos...";
+      btn.disabled = true;
+
+      for (let i = 0; i < pendingUploadDataUrls.length; i++) {
+        const dataUrl = pendingUploadDataUrls[i];
+        const rot = (i % 2 === 0 ? 1.6 : -1.6);
+
+        if (hasBackend) {
+          try {
+            const res = await fetch("/api/photo", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ dataUrl, author, category, caption, sticker, date: dateStr, rotation: rot })
+            });
+            if (res.ok) {
+              const out = await res.json();
+              if (out.album) albumData = out.album;
+              continue;
+            }
+          } catch (e) {}
+        }
+
+        // Local/Cloud fallback
+        albumData.photos.unshift({
+          id: "photo-" + Date.now() + "-" + i,
+          src: dataUrl,
+          category,
+          caption,
+          author,
+          date: dateStr,
+          sticker,
+          pinColor: "#FF4D79",
+          rotation: rot,
+          favorite: true,
+          reactions: { "❤️": 1, "👏": 1, "😍": 1, "🤣": 0, "🥂": 0, "🏆": 0 },
+          comments: []
+        });
+      }
+
+      btn.textContent = "✨ Adicionar ao Mural Agora";
+      btn.disabled = false;
+      document.getElementById("upload-files").value = "";
+      document.getElementById("upload-preview-strip").innerHTML = "";
+      document.getElementById("upload-caption").value = "";
+      pendingUploadDataUrls = [];
+
+      closeUploadModal();
+      activeCategory = "Todas";
+      renderAll();
+      persistState();
+      launchConfetti();
+      showToast("🎉 Fotos adicionadas ao mural com sucesso!");
+    }
+
+    /* STICKY NOTES */
+    function openNoteModal() {
+      document.getElementById("note-modal").classList.add("open");
+    }
+    function closeNoteModal() {
+      document.getElementById("note-modal").classList.remove("open");
+    }
+
+    async function submitStickyNote() {
+      const author = document.getElementById("note-author").value.trim() || "Amiga 💖";
+      const text = document.getElementById("note-text").value.trim();
+      const color = document.getElementById("note-color").value;
+      if (!text) {
+        showToast("Escreva seu recadinho antes de fixar!");
+        return;
+      }
+      const date = new Date().toLocaleDateString("pt-BR");
+      const rotation = (Math.random() * 4 - 2).toFixed(1);
+
+      if (hasBackend) {
+        try {
+          const res = await fetch("/api/note", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "add", author, text, color, date, rotation })
+          });
+          if (res.ok) {
+            const out = await res.json();
+            albumData = out.album;
+          }
+        } catch (e) {}
+      } else {
+        albumData.stickyNotes = albumData.stickyNotes || [];
+        albumData.stickyNotes.unshift({
+          id: "note-" + Date.now(),
+          author,
+          text,
+          color,
+          rotation: parseFloat(rotation),
+          date
+        });
+      }
+
+      document.getElementById("note-text").value = "";
+      closeNoteModal();
+      renderNotes();
+      persistState();
+      showToast("📌 Recadinho colado no mural!");
+    }
+
+    async function deleteNote(noteId) {
+      albumData.stickyNotes = (albumData.stickyNotes || []).filter(n => n.id !== noteId);
+      renderNotes();
+      persistState();
+      if (hasBackend) {
+        fetch("/api/note", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "delete", noteId })
+        }).catch(() => {});
+      }
+    }
+
+    /* MUSIC PLAYER (PLAYLIST JOÃO GOMES) */
+    async function initMusicPlayer() {
+      const sel = document.getElementById("track-select");
+      let tracks = albumData.tracks || [];
+
+      sel.innerHTML = tracks.map((t, i) => `
+        <option value="${i}">${escapeHtml(t.title)}</option>
+      `).join("");
+
+      if (tracks.length > 0) {
+        loadTrack(0, false);
+      }
+    }
+
+    function openJoaoGomesSpotify() {
+      const drawer = document.getElementById("embed-drawer");
+      const embedBox = document.getElementById("embed-container");
+      const audio = document.getElementById("audio-player");
+      audio.pause();
+      setPlayingUI(false);
+      drawer.classList.add("open");
+      embedBox.innerHTML = `<iframe src="https://open.spotify.com/embed/artist/4JNo6Q5KdcRf1vtSX9mB0S?utm_source=generator" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;"></iframe>`;
+      showToast("🎧 Playlist Oficial do João Gomes aberta no Spotify!");
+    }
+
+    function loadTrack(idx, autoPlay) {
+      const tracks = albumData.tracks || [];
+      if (!tracks[idx]) return;
+      currentTrackIndex = idx;
+      const t = tracks[idx];
+      document.getElementById("track-select").value = String(idx);
+      document.getElementById("now-playing-title").textContent = t.title;
+      document.getElementById("now-playing-artist").textContent = t.artist || "Playlist João Gomes";
+
+      const disc = document.getElementById("vinyl-disc");
+      const discMini = document.getElementById("vinyl-disc-mini");
+      if (t.artwork) {
+        disc.style.backgroundImage = `url('${t.artwork}')`;
+        disc.style.backgroundSize = "cover";
+        disc.textContent = "";
+        if (discMini) {
+          discMini.style.backgroundImage = `url('${t.artwork}')`;
+          discMini.style.backgroundSize = "cover";
+          discMini.textContent = "";
+        }
+      } else {
+        disc.style.backgroundImage = "";
+        disc.textContent = "🪗";
+        if (discMini) {
+          discMini.style.backgroundImage = "";
+          discMini.textContent = "🪗";
+        }
+      }
+
+      const audio = document.getElementById("audio-player");
+      const drawer = document.getElementById("embed-drawer");
+      const embedBox = document.getElementById("embed-container");
+
+      if (t.type === "youtube" || (t.url && (t.url.includes("youtube.com") || t.url.includes("youtu.be")))) {
+        audio.pause();
+        const vid = extractYouTubeId(t.url);
+        if (vid) {
+          drawer.classList.add("open");
+          embedBox.innerHTML = `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${vid}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius:12px;"></iframe>`;
+          setPlayingUI(true);
+        }
+        return;
+      } else if (t.type === "spotify" || (t.url && t.url.includes("spotify.com"))) {
+        openJoaoGomesSpotify();
+        return;
+      }
+
+      drawer.classList.remove("open");
+      embedBox.innerHTML = "";
+      audio.loop = false;
+      audio.src = t.url;
+      if (autoPlay) {
+        audio.play().then(() => setPlayingUI(true)).catch(() => setPlayingUI(false));
+      }
+    }
+
+    function extractYouTubeId(url) {
+      const m = url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
+      return m ? m[1] : null;
+    }
+
+    function toggleCollapseMusicBar() {
+      const bar = document.getElementById("music-bar");
+      const isCol = bar.classList.toggle("collapsed");
+      document.body.classList.toggle("sidebar-collapsed", isCol);
+    }
+
+    function togglePlayMusic() {
+      const audio = document.getElementById("audio-player");
+      if (isPlayingMusic) {
+        audio.pause();
+        setPlayingUI(false);
+      } else {
+        const tracks = albumData.tracks || [];
+        const cur = tracks[currentTrackIndex];
+        if (!audio.src || (cur && cur.type === "spotify")) {
+          loadTrack(0, true);
+          return;
+        }
+        audio.play().then(() => setPlayingUI(true)).catch(() => {
+          loadTrack(0, true);
+        });
+      }
+    }
+
+    function setPlayingUI(playing) {
+      isPlayingMusic = playing;
+      const disc = document.getElementById("vinyl-disc");
+      const discMini = document.getElementById("vinyl-disc-mini");
+      const btn = document.getElementById("play-pause-btn");
+      const btnMini = document.getElementById("play-pause-btn-mini");
+      if (disc) disc.classList.toggle("playing", playing);
+      if (discMini) discMini.classList.toggle("playing", playing);
+      if (btn) btn.textContent = playing ? "⏸️ Pausar" : "▶️ Tocar";
+      if (btnMini) btnMini.textContent = playing ? "⏸️" : "▶️";
+    }
+
+    function selectTrack(idxStr) {
+      loadTrack(parseInt(idxStr, 10), true);
+    }
+
+    function nextTrack() {
+      const tracks = albumData.tracks || [];
+      if (!tracks.length) return;
+      loadTrack((currentTrackIndex + 1) % tracks.length, true);
+    }
+
+    function prevTrack() {
+      const tracks = albumData.tracks || [];
+      if (!tracks.length) return;
+      loadTrack((currentTrackIndex - 1 + tracks.length) % tracks.length, true);
+    }
+
+    function changeVolume(val) {
+      document.getElementById("audio-player").volume = parseFloat(val);
+    }
+
+    function openMusicModal() {
+      document.getElementById("music-modal").classList.add("open");
+    }
+    function closeMusicModal() {
+      document.getElementById("music-modal").classList.remove("open");
+    }
+
+    async function submitNewMusic() {
+      const titleInput = document.getElementById("music-title").value.trim();
+      const fileInput = document.getElementById("music-file");
+      const urlInput = document.getElementById("music-url").value.trim();
+
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const title = titleInput || "🎵 " + file.name.replace(/\.\w+$/, "");
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const dataUrl = e.target.result;
+          if (hasBackend) {
+            try {
+              const res = await fetch("/api/music", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "add", title, dataUrl, type: "audio" })
+              });
+              if (res.ok) {
+                const out = await res.json();
+                albumData = out.album;
+                initMusicPlayer();
+                loadTrack(albumData.tracks.length - 1, true);
+                closeMusicModal();
+                showToast("🎶 Música adicionada ao álbum!");
+                return;
+              }
+            } catch (err) {}
+          }
+          albumData.tracks.push({ id: "track-" + Date.now(), title, artist: "Arquivo MP3", url: dataUrl, type: "audio" });
+          initMusicPlayer();
+          loadTrack(albumData.tracks.length - 1, true);
+          persistState();
+          closeMusicModal();
+          showToast("🎶 Música adicionada!");
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      if (urlInput) {
+        const title = titleInput || "🎶 Link Musical das Amigas";
+        let type = "audio";
+        if (urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) type = "youtube";
+        else if (urlInput.includes("spotify.com")) type = "spotify";
+
+        if (hasBackend) {
+          try {
+            const res = await fetch("/api/music", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ action: "add", title, url: urlInput, type })
+            });
+            if (res.ok) {
+              const out = await res.json();
+              albumData = out.album;
+            }
+          } catch (e) {}
+        } else {
+          albumData.tracks.push({ id: "track-" + Date.now(), title, artist: "Link Compartilhado", url: urlInput, type });
+        }
+        initMusicPlayer();
+        loadTrack(albumData.tracks.length - 1, true);
+        persistState();
+        closeMusicModal();
+        showToast("🎶 Link musical adicionado!");
+        return;
+      }
+
+      showToast("Selecione um arquivo MP3 ou cole um link do YouTube/Spotify!");
+    }
+
+    /* SLIDESHOW CINEMA MODE */
+    function startSlideshow() {
+      filteredPhotos = getFilteredPhotos();
+      if (!filteredPhotos.length) return;
+      slideshowIdx = 0;
+      slideshowPaused = false;
+      document.getElementById("slideshow-overlay").classList.add("open");
+      if (!isPlayingMusic) togglePlayMusic();
+      launchConfetti();
+      renderSlideshowFrame();
+      clearInterval(slideshowTimer);
+      slideshowTimer = setInterval(() => {
+        if (!slideshowPaused) stepSlideshow(1);
+      }, 4500);
+    }
+
+    function stopSlideshow() {
+      clearInterval(slideshowTimer);
+      document.getElementById("slideshow-overlay").classList.remove("open");
+    }
+
+    function togglePauseSlideshow() {
+      slideshowPaused = !slideshowPaused;
+      document.getElementById("slideshow-pause-btn").textContent = slideshowPaused ? "▶️ Continuar" : "⏸️ Pausar";
+    }
+
+    function stepSlideshow(dir) {
+      slideshowIdx = (slideshowIdx + dir + filteredPhotos.length) % filteredPhotos.length;
+      renderSlideshowFrame();
+    }
+
+    function renderSlideshowFrame() {
+      const p = filteredPhotos[slideshowIdx];
+      if (!p) return;
+      if (p.favorite) launchConfetti();
+      const stage = document.getElementById("slideshow-stage");
+      stage.innerHTML = `
+        <div class="slideshow-polaroid">
+          <img src="${encodeURI(p.src)}" alt="${escapeHtml(p.caption)}" />
+          <div class="slideshow-caption">${p.sticker || '✨'} ${escapeHtml(p.caption)}</div>
+          <div style="font-size:0.88rem; color:#6E647E; margin-top:6px;">
+            Foto ${slideshowIdx + 1} de ${filteredPhotos.length} • ${escapeHtml(p.category)}
+          </div>
+        </div>
+      `;
+    }
+
+    /* SHARE & BACKUP & VIDEOS */
+    function openVideoModal() {
+      document.getElementById("video-modal").classList.add("open");
+    }
+    function closeVideoModal() {
+      document.getElementById("video-modal").classList.remove("open");
+    }
+
+    function openShareModal() {
+      document.getElementById("share-modal").classList.add("open");
+    }
+    function closeShareModal() {
+      document.getElementById("share-modal").classList.remove("open");
+    }
+
+    function saveCloudConfig() {
+      const url = document.getElementById("cloud-sync-url").value.trim();
+      albumData.cloudSyncUrl = url;
+      localStorage.setItem("ALBUM_CLOUD_URL", url);
+      persistState();
+      showToast("☁️ Configuração de nuvem salva!");
+    }
+
+    function exportAlbumBackup() {
+      const blob = new Blob([JSON.stringify(albumData, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "album_pos_claudia_amigas.json";
+      a.click();
+      showToast("⬇️ Backup do álbum baixado!");
+    }
+
+    function importAlbumBackup(ev) {
+      const file = ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && imported.photos) {
+            albumData = imported;
+            renderAll();
+            persistState();
+            if (hasBackend) {
+              fetch("/api/sync_state", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(albumData)
+              }).catch(() => {});
+            }
+            closeShareModal();
+            launchConfetti();
+            showToast("🎉 Álbum atualizado com sucesso!");
+          }
+        } catch (err) {
+          showToast("Arquivo inválido!");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    /* CONFETTI CELEBRATION */
+    function launchConfetti() {
+      const canvas = document.getElementById("confetti-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const pieces = Array.from({ length: 90 }).map(() => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 100,
+        size: 6 + Math.random() * 7,
+        color: ["#FF4D79", "#FFB800", "#00C49A", "#7B61FF", "#00A8E8"][Math.floor(Math.random() * 5)],
+        vy: 2.5 + Math.random() * 4,
+        vx: -2 + Math.random() * 4,
+        rot: Math.random() * 6.28,
+        vrot: -0.1 + Math.random() * 0.2
+      }));
+
+      let frame = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.vrot;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 150) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      draw();
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (document.getElementById("lightbox-modal").classList.contains("open")) {
+        if (e.key === "ArrowLeft") navigateLightbox(-1);
+        else if (e.key === "ArrowRight") navigateLightbox(1);
+        else if (e.key === "Escape") closeLightbox();
+      } else if (document.getElementById("slideshow-overlay").classList.contains("open")) {
+        if (e.key === "ArrowLeft") stepSlideshow(-1);
+        else if (e.key === "ArrowRight") stepSlideshow(1);
+        else if (e.key === "Escape") stopSlideshow();
+      }
+    });
+
+    initAlbum();
+  </script>
+</body>
+</html>
