@@ -1235,6 +1235,14 @@
         Você e suas amigas podem escolher uma ou várias fotos do celular/computador e já deixar um comentário especial!
       </p>
 
+      <div style="background:#E8F8F0; border:1px solid #A8E6CF; border-radius:12px; padding:10px 12px; margin-bottom:14px; font-size:0.82rem; color:#0A6B40; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+        <span>☁️ <strong>Salvamento Automático em Nuvem Ativo:</strong> As fotos inseridas aqui aparecem automaticamente para todas as amigas e salvam no álbum!</span>
+        <label style="display:inline-flex; align-items:center; gap:6px; font-weight:700; cursor:pointer;">
+          <input type="checkbox" id="auto-save-on-select" style="accent-color:#00C49A;" />
+          Publicar direto ao escolher
+        </label>
+      </div>
+
       <div class="form-group">
         <label>Escolha as Fotos (pode selecionar várias de uma vez)</label>
         <input type="file" id="upload-files" accept="image/*" multiple class="form-control" onchange="previewUploadFiles()" />
@@ -1603,6 +1611,137 @@
 
       renderAll();
       initMusicPlayer();
+      initNtfyCloudSync();
+    }
+
+    const NTFY_CLOUD_TOPIC = "album_pos_cdia_claudia_amigas_2026_oficial";
+    const processedCloudEvents = new Set();
+
+    async function publishCloudEvent(payload) {
+      const evt = Object.assign({
+        eventId: "evt-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7),
+        ts: Date.now()
+      }, payload);
+      processedCloudEvents.add(evt.eventId);
+
+      try {
+        await fetch(`https://ntfy.sh/${NTFY_CLOUD_TOPIC}`, {
+          method: "PUT",
+          headers: { "Filename": "album_event.json" },
+          body: JSON.stringify(evt)
+        });
+      } catch (e) {}
+    }
+
+    async function handleNtfyMessage(msgObj) {
+      if (!msgObj || msgObj.event !== "message") return false;
+      let data = null;
+      try {
+        if (msgObj.attachment && msgObj.attachment.url) {
+          const r = await fetch(msgObj.attachment.url);
+          if (r.ok) data = await r.json();
+        } else if (msgObj.message) {
+          data = JSON.parse(msgObj.message);
+        }
+      } catch (e) {}
+      if (!data || !data.op) return false;
+      if (data.eventId && processedCloudEvents.has(data.eventId)) return false;
+      if (data.eventId) processedCloudEvents.add(data.eventId);
+
+      let changed = false;
+      if (data.op === "add_photo" && data.photo) {
+        if (!albumData.photos.some(p => p.id === data.photo.id)) {
+          albumData.photos.unshift(data.photo);
+          changed = true;
+        }
+      } else if (data.op === "comment" && data.photoId && data.comment) {
+        const p = albumData.photos.find(x => x.id === data.photoId);
+        if (p) {
+          p.comments = p.comments || [];
+          if (!p.comments.some(c => c.id === data.comment.id)) {
+            p.comments.push(data.comment);
+            changed = true;
+          }
+        }
+      } else if (data.op === "edit_photo" && data.photoId) {
+        const p = albumData.photos.find(x => x.id === data.photoId);
+        if (p) {
+          if (data.caption) p.caption = data.caption;
+          if (data.category) p.category = data.category;
+          if (data.sticker) p.sticker = data.sticker;
+          changed = true;
+        }
+      } else if (data.op === "react" && data.photoId && data.emoji) {
+        const p = albumData.photos.find(x => x.id === data.photoId);
+        if (p) {
+          p.reactions = p.reactions || {};
+          if (typeof data.count === "number") {
+            p.reactions[data.emoji] = Math.max(p.reactions[data.emoji] || 0, data.count);
+          } else {
+            p.reactions[data.emoji] = (p.reactions[data.emoji] || 0) + 1;
+          }
+          changed = true;
+        }
+      } else if (data.op === "favorite" && data.photoId) {
+        const p = albumData.photos.find(x => x.id === data.photoId);
+        if (p && typeof data.favorite === "boolean") {
+          p.favorite = data.favorite;
+          changed = true;
+        }
+      } else if (data.op === "add_note" && data.note) {
+        albumData.stickyNotes = albumData.stickyNotes || [];
+        if (!albumData.stickyNotes.some(n => n.id === data.note.id)) {
+          albumData.stickyNotes.unshift(data.note);
+          changed = true;
+        }
+      } else if (data.op === "delete_note" && data.noteId) {
+        const before = (albumData.stickyNotes || []).length;
+        albumData.stickyNotes = (albumData.stickyNotes || []).filter(n => n.id !== data.noteId);
+        if (albumData.stickyNotes.length !== before) changed = true;
+      }
+
+      if (changed) {
+        try { localStorage.setItem("ALBUM_CLAUDIA_AMIGAS_V3", JSON.stringify(albumData)); } catch (e) {}
+      }
+      return changed;
+    }
+
+    async function initNtfyCloudSync() {
+      try {
+        const res = await fetch(`https://ntfy.sh/${NTFY_CLOUD_TOPIC}/json?poll=1&since=all`);
+        if (res.ok) {
+          const text = await res.text();
+          const lines = text.trim().split("\n").filter(Boolean);
+          let anyChanged = false;
+          for (const line of lines) {
+            try {
+              const msg = JSON.parse(line);
+              const ch = await handleNtfyMessage(msg);
+              if (ch) anyChanged = true;
+            } catch (e) {}
+          }
+          if (anyChanged) renderAll();
+          document.getElementById("sync-status-badge").textContent = "☁️ Nuvem Automática Ativa • João Gomes 🪗";
+        }
+      } catch (e) {}
+
+      // Real-time stream for new photos, comments & sticky notes from friends
+      try {
+        const es = new EventSource(`https://ntfy.sh/${NTFY_CLOUD_TOPIC}/sse`);
+        es.onmessage = async (ev) => {
+          try {
+            const msg = JSON.parse(ev.data);
+            const ch = await handleNtfyMessage(msg);
+            if (ch) {
+              renderAll();
+              if (document.getElementById("lightbox-modal").classList.contains("open")) {
+                renderLightboxContent();
+              }
+              showToast("☁️ Nova atualização recebida de uma amiga!");
+            }
+          } catch (e) {}
+        };
+      } catch (e) {}
     }
 
     function buildCloudDelta() {
@@ -1832,6 +1971,7 @@
         renderLightboxContent();
       }
       persistState();
+      publishCloudEvent({ op: "react", photoId, emoji, count: p.reactions[emoji] });
 
       if (hasBackend) {
         fetch("/api/update_photo", {
@@ -1850,6 +1990,7 @@
       renderCategories();
       renderMural();
       persistState();
+      publishCloudEvent({ op: "favorite", photoId, favorite: p.favorite });
 
       if (hasBackend) {
         fetch("/api/update_photo", {
@@ -1945,6 +2086,13 @@
       renderCategories();
       renderMural();
       persistState();
+      publishCloudEvent({
+        op: "edit_photo",
+        photoId: p.id,
+        caption: p.caption,
+        category: p.category,
+        sticker: p.sticker
+      });
       showToast("✨ Legenda atualizada com sucesso!");
 
       if (hasBackend) {
@@ -1975,16 +2123,18 @@
       }
       const dateStr = new Date().toLocaleDateString("pt-BR");
       p.comments = p.comments || [];
-      p.comments.push({
+      const newComment = {
         id: "c-" + Date.now(),
         author,
         text,
         date: dateStr
-      });
+      };
+      p.comments.push(newComment);
       textInput.value = "";
       renderLightboxContent();
       renderMural();
       persistState();
+      publishCloudEvent({ op: "comment", photoId: p.id, comment: newComment });
       showToast("💌 Comentário adicionado!");
 
       if (hasBackend) {
@@ -2018,8 +2168,10 @@
       strip.innerHTML = "";
       pendingUploadDataUrls = [];
 
-      Array.from(input.files || []).forEach(file => {
-        compressImageFile(file, 1280, 0.82).then(dataUrl => {
+      const files = Array.from(input.files || []);
+      let doneCount = 0;
+      files.forEach(file => {
+        compressImageFile(file, 960, 0.80).then(dataUrl => {
           pendingUploadDataUrls.push(dataUrl);
           const img = document.createElement("img");
           img.src = dataUrl;
@@ -2027,6 +2179,10 @@
           img.style.borderRadius = "10px";
           img.style.objectFit = "cover";
           strip.appendChild(img);
+          doneCount++;
+          if (doneCount === files.length && document.getElementById("auto-save-on-select")?.checked) {
+            submitUploadedPhotos();
+          }
         });
       });
     }
@@ -2073,6 +2229,23 @@
       for (let i = 0; i < pendingUploadDataUrls.length; i++) {
         const dataUrl = pendingUploadDataUrls[i];
         const rot = (i % 2 === 0 ? 1.6 : -1.6);
+        const newPhotoObj = {
+          id: "photo-" + Date.now() + "-" + i,
+          src: dataUrl,
+          category,
+          caption,
+          author,
+          date: dateStr,
+          sticker,
+          pinColor: "#FF4D79",
+          rotation: rot,
+          favorite: true,
+          reactions: { "❤️": 1, "👏": 1, "😍": 1, "🤣": 0, "🥂": 0, "🏆": 0 },
+          comments: []
+        };
+
+        // Publish automatically to the shared Cloud Stream so all friends see it immediately
+        publishCloudEvent({ op: "add_photo", photo: newPhotoObj });
 
         if (hasBackend) {
           try {
@@ -2090,20 +2263,7 @@
         }
 
         // Local/Cloud fallback
-        albumData.photos.unshift({
-          id: "photo-" + Date.now() + "-" + i,
-          src: dataUrl,
-          category,
-          caption,
-          author,
-          date: dateStr,
-          sticker,
-          pinColor: "#FF4D79",
-          rotation: rot,
-          favorite: true,
-          reactions: { "❤️": 1, "👏": 1, "😍": 1, "🤣": 0, "🥂": 0, "🏆": 0 },
-          comments: []
-        });
+        albumData.photos.unshift(newPhotoObj);
       }
 
       btn.textContent = "✨ Adicionar ao Mural Agora";
@@ -2140,6 +2300,16 @@
       const date = new Date().toLocaleDateString("pt-BR");
       const rotation = (Math.random() * 4 - 2).toFixed(1);
 
+      const newNote = {
+        id: "note-" + Date.now(),
+        author,
+        text,
+        color,
+        rotation: parseFloat(rotation),
+        date
+      };
+      publishCloudEvent({ op: "add_note", note: newNote });
+
       if (hasBackend) {
         try {
           const res = await fetch("/api/note", {
@@ -2154,14 +2324,7 @@
         } catch (e) {}
       } else {
         albumData.stickyNotes = albumData.stickyNotes || [];
-        albumData.stickyNotes.unshift({
-          id: "note-" + Date.now(),
-          author,
-          text,
-          color,
-          rotation: parseFloat(rotation),
-          date
-        });
+        albumData.stickyNotes.unshift(newNote);
       }
 
       document.getElementById("note-text").value = "";
@@ -2175,6 +2338,7 @@
       albumData.stickyNotes = (albumData.stickyNotes || []).filter(n => n.id !== noteId);
       renderNotes();
       persistState();
+      publishCloudEvent({ op: "delete_note", noteId });
       if (hasBackend) {
         fetch("/api/note", {
           method: "POST",
