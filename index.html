@@ -1615,6 +1615,7 @@
     }
 
     const NTFY_CLOUD_TOPIC = "album_pos_cdia_claudia_amigas_2026_oficial";
+    const PERMANENT_CLOUD_DB = "https://textdb.dev/api/data/album-pos-cdia-claudia-amigas-2026-db";
     const processedCloudEvents = new Set();
 
     async function publishCloudEvent(payload) {
@@ -1624,12 +1625,24 @@
       }, payload);
       processedCloudEvents.add(evt.eventId);
 
+      // Save permanently to textdb.dev first
+      saveToPermanentCloud().catch(() => {});
+
+      const bodyStr = JSON.stringify(evt);
       try {
-        await fetch(`https://ntfy.sh/${NTFY_CLOUD_TOPIC}`, {
-          method: "PUT",
-          headers: { "Filename": "album_event.json" },
-          body: JSON.stringify(evt)
-        });
+        if (bodyStr.length < 3800) {
+          // Simple inline POST (no CORS preflight, stored directly inside msg.message!)
+          await fetch(`https://ntfy.sh/${NTFY_CLOUD_TOPIC}`, {
+            method: "POST",
+            body: bodyStr
+          });
+        } else {
+          await fetch(`https://ntfy.sh/${NTFY_CLOUD_TOPIC}`, {
+            method: "PUT",
+            headers: { "Filename": "album_event.json" },
+            body: bodyStr
+          });
+        }
       } catch (e) {}
     }
 
@@ -1702,11 +1715,83 @@
 
       if (changed) {
         try { localStorage.setItem("ALBUM_CLAUDIA_AMIGAS_V3", JSON.stringify(albumData)); } catch (e) {}
+        if (hasBackend) {
+          fetch("/api/sync_state", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(albumData)
+          }).catch(() => {});
+        }
       }
       return changed;
     }
 
+    async function syncPermanentCloud() {
+      try {
+        const localBefore = buildCloudDelta();
+        const localEditCount = Object.keys(localBefore.captionEdits || {}).length +
+          Object.keys(localBefore.comments || {}).length +
+          (localBefore.addedPhotos || []).length;
+
+        const r = await fetch(PERMANENT_CLOUD_DB + "?t=" + Date.now());
+        if (r.ok) {
+          const text = await r.text();
+          if (text && text.trim().startsWith("{")) {
+            const remoteDelta = JSON.parse(text);
+            applyCloudDelta(remoteDelta);
+            renderAll();
+            try { localStorage.setItem("ALBUM_CLAUDIA_AMIGAS_V3", JSON.stringify(albumData)); } catch (e) {}
+            if (hasBackend) {
+              fetch("/api/sync_state", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(albumData)
+              }).catch(() => {});
+            }
+          }
+        }
+        // If this device (e.g. phone) already had local edits in localStorage, push merged delta to cloud!
+        if (localEditCount > 0) {
+          await saveToPermanentCloud();
+        }
+      } catch (e) {}
+    }
+
+    async function saveToPermanentCloud() {
+      try {
+        let merged = buildCloudDelta();
+        try {
+          const r = await fetch(PERMANENT_CLOUD_DB + "?t=" + Date.now());
+          if (r.ok) {
+            const txt = await r.text();
+            if (txt && txt.trim().startsWith("{")) {
+              const remote = JSON.parse(txt);
+              // Merge remote delta with our current delta so no device overwrites another's edits
+              const existingPhotoIds = new Set((merged.addedPhotos || []).map(p => p.id));
+              (remote.addedPhotos || []).forEach(rp => {
+                if (!existingPhotoIds.has(rp.id)) merged.addedPhotos.push(rp);
+              });
+              merged.captionEdits = Object.assign({}, remote.captionEdits || {}, merged.captionEdits || {});
+              merged.categoryEdits = Object.assign({}, remote.categoryEdits || {}, merged.categoryEdits || {});
+              merged.stickerEdits = Object.assign({}, remote.stickerEdits || {}, merged.stickerEdits || {});
+              merged.favorites = Object.assign({}, remote.favorites || {}, merged.favorites || {});
+              merged.reactions = Object.assign({}, remote.reactions || {}, merged.reactions || {});
+              merged.comments = Object.assign({}, remote.comments || {}, merged.comments || {});
+            }
+          }
+        } catch (e) {}
+
+        await fetch(PERMANENT_CLOUD_DB, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(merged)
+        });
+      } catch (e) {}
+    }
+
     async function initNtfyCloudSync() {
+      await syncPermanentCloud();
+
       try {
         const res = await fetch(`https://ntfy.sh/${NTFY_CLOUD_TOPIC}/json?poll=1&since=all`);
         if (res.ok) {
@@ -1737,7 +1822,7 @@
               if (document.getElementById("lightbox-modal").classList.contains("open")) {
                 renderLightboxContent();
               }
-              showToast("☁️ Nova atualização recebida de uma amiga!");
+              showToast("☁️ Nova atualização recebida!");
             }
           } catch (e) {}
         };
@@ -1745,17 +1830,22 @@
     }
 
     function buildCloudDelta() {
-      const baseIds = new Set((window.INITIAL_ALBUM_DATA ? window.INITIAL_ALBUM_DATA.photos : []).map(p => p.id));
+      const initPhotos = window.INITIAL_ALBUM_DATA ? window.INITIAL_ALBUM_DATA.photos : [];
+      const initMap = {};
+      initPhotos.forEach(ip => { initMap[ip.id] = ip; });
+      const baseIds = new Set(initPhotos.map(p => p.id));
+
       const addedPhotos = albumData.photos.filter(p => !baseIds.has(p.id));
       const captionEdits = {}, categoryEdits = {}, stickerEdits = {}, favorites = {}, reactions = {}, comments = {};
       albumData.photos.forEach(p => {
         if (baseIds.has(p.id)) {
-          captionEdits[p.id] = p.caption;
-          categoryEdits[p.id] = p.category;
-          stickerEdits[p.id] = p.sticker;
-          favorites[p.id] = p.favorite;
-          reactions[p.id] = p.reactions;
-          if (p.comments && p.comments.length > 0) comments[p.id] = p.comments;
+          const orig = initMap[p.id] || {};
+          if (p.caption !== orig.caption) captionEdits[p.id] = p.caption;
+          if (p.category !== orig.category) categoryEdits[p.id] = p.category;
+          if (p.sticker !== orig.sticker) stickerEdits[p.id] = p.sticker;
+          if (p.favorite !== orig.favorite) favorites[p.id] = p.favorite;
+          if (JSON.stringify(p.reactions) !== JSON.stringify(orig.reactions)) reactions[p.id] = p.reactions;
+          if ((p.comments || []).length > (orig.comments || []).length) comments[p.id] = p.comments;
         }
       });
       return {
